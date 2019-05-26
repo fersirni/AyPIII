@@ -15,7 +15,8 @@ struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz);
 //Opcion 2
 void borrarNodo(struct nodo **);
 //Opcion 3
-void buscarNodo(struct nodo **);
+struct nodo *buscarNodo(struct nodo **);
+struct nodo *buscarPosicion(int valor, struct nodo **raiz);
 //Opcion 4
 void inOrder(struct nodo *);
 //Opcion 5
@@ -106,11 +107,52 @@ void preOrder(struct nodo *raiz) {
 }
 
 void borrarNodo(struct nodo **raiz) {
-    //TODO
+    struct nodo *posicion = buscarNodo(raiz);
+    if(posicion != NULL){
+        //TODO metodo de borrado
+    }
 }
 
-void buscarNodo(struct nodo **raiz) {
-    //TODO
+struct nodo *buscarNodo(struct nodo **raiz) {
+    int numeroIngresado;
+    printf("Ingrese el numero: ");
+    scanf("%d", &numeroIngresado);
+    if (*raiz == NULL) {
+        printf("El arbol esta vacio");
+        return NULL;
+    } else {
+        //printf("Intentando buscar el valor %d \n",numeroIngresado);
+        struct nodo *posicion = buscarPosicion(numeroIngresado, raiz);
+        if(posicion != NULL){
+            printf("Valor encontrado! El valor de la posicion es: %d \n",posicion -> valor);
+            return posicion;
+        } else {
+            printf("El valor buscado no se encuentra en el arbol. \n");
+            return NULL;
+        }
+    }
+}
+
+struct nodo *buscarPosicion(int valor, struct nodo **raiz) {
+    struct nodo *posicion = *raiz;
+    //printf("El valor de la raiz es: %d \n", posicion -> valor);
+    while(valor != posicion -> valor){
+        if(valor > posicion -> valor){
+            if(posicion -> derecha == NULL){
+                return NULL;
+            } else {
+                posicion = posicion -> derecha;
+            }
+        }
+        if(posicion -> valor > valor){
+            if(posicion -> izquierda == NULL){
+                return NULL;
+            } else {
+                posicion = posicion -> izquierda;
+            }
+        }
+    }
+    return posicion;
 }
 
 void insertarNodo(struct nodo **raiz) {
@@ -133,15 +175,15 @@ void insertarNodo(struct nodo **raiz) {
             *raiz = auxiliar;
         } else {
             int valor = auxiliar -> valor;
-            printf("Intentando insertar el valor %d \n",valor);
+            //printf("Intentando insertar el valor %d \n",valor);
             struct nodo *posicion = buscarPosicionParaInsertar(valor, raiz);
             if(posicion != NULL){
-                printf("el valor de la posicion es: %d \n",posicion -> valor);
+                //printf("el valor de la posicion es: %d \n",posicion -> valor);
                 if(valor > posicion -> valor){
-                    printf("Se agrega a la derecha \n");
+                    //printf("Se agrega a la derecha \n");
                     posicion -> derecha = auxiliar;
                 } else {
-                    printf("Se agrega a la izquierda \n");
+                    //printf("Se agrega a la izquierda \n");
                     posicion -> izquierda = auxiliar;
                 }
             }
@@ -155,31 +197,31 @@ void insertarNodo(struct nodo **raiz) {
 
 struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz) {
     struct nodo *posicion = *raiz;
-    printf("El valor de la raiz es: %d \n", posicion -> valor);
+    //printf("El valor de la raiz es: %d \n", posicion -> valor);
     int noEncontre = 1;
     while(noEncontre == 1){
         if(valor == posicion -> valor){
-            printf("El numero ya existia en el arbol.\n");
+            printf("No se agrego. El numero ya existia en el arbol.\n");
             return NULL;
         }
         while(valor > posicion -> valor){
-            printf("Entre al primer while. valor: %d, valor de la posicion: %d \n", valor, posicion -> valor);
+            //printf("Entre al primer while. valor: %d, valor de la posicion: %d \n", valor, posicion -> valor);
             if(posicion -> derecha != NULL){
-                printf("El valor %d es mayor al del nodo %d, se busca en el nodo de la derecha\n", valor , posicion -> valor);
+                //printf("El valor %d es mayor al del nodo %d, se busca en el nodo de la derecha\n", valor , posicion -> valor);
                 posicion = posicion -> derecha;
             } else {
-                printf("El valor  %d es mayor al del nodo %d y el nodo de la derecha es nulo, encontre la posicion!\n", valor , posicion -> valor);
+                //printf("El valor  %d es mayor al del nodo %d y el nodo de la derecha es nulo, encontre la posicion!\n", valor , posicion -> valor);
                 noEncontre = 0;
                 break;
             }
         }
         while(posicion -> valor > valor){
-            printf("Entre al segundo while. valor: %d, valor de la posicion: %d \n", valor, posicion -> valor);
+            //printf("Entre al segundo while. valor: %d, valor de la posicion: %d \n", valor, posicion -> valor);
             if(posicion -> izquierda != NULL){
-                printf("El valor  %d es menor al del nodo %d, se busca en el nodo de la izquierda\n", valor , posicion -> valor);
+                //printf("El valor  %d es menor al del nodo %d, se busca en el nodo de la izquierda\n", valor , posicion -> valor);
                 posicion = posicion -> izquierda;
             } else {
-                printf("El valor  %d es menor al del nodo %d y el nodo de la izquierda es nulo, encontre la posicion!\n", valor , posicion -> valor);
+                //printf("El valor  %d es menor al del nodo %d y el nodo de la izquierda es nulo, encontre la posicion!\n", valor , posicion -> valor);
                 noEncontre = 0;
                 break;
             }
