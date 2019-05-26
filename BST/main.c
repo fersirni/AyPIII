@@ -14,6 +14,8 @@ struct nodo {
 void insertarNodo(struct nodo **);
 struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz);
 void inOrder(struct nodo *);
+void preOrder(struct nodo *);
+void postOrder(struct nodo *);
 
 
 int main() {
@@ -21,18 +23,37 @@ int main() {
     printf("Trabajo Practico - Arbol binario de busqueda (balanceado) \n\n");
     //TODO menu de selección de acción
     insertarNodo(&raiz);
+    printf("\n Pre-order \n");
+    preOrder(raiz);
+    printf("\n In-order \n");
     inOrder(raiz);
-
+    printf("\n Post-order \n");
+    postOrder(raiz);
     return 0;
 }
 
 
-void inOrder(struct nodo *raiz)
-{
+void inOrder(struct nodo *raiz) {
     if (raiz != NULL){
         inOrder(raiz -> izquierda);
         printf("%d  ", raiz -> valor);
         inOrder(raiz -> derecha);
+    }
+}
+
+void postOrder(struct nodo *raiz) {
+    if (raiz != NULL){
+        postOrder(raiz -> izquierda);
+        postOrder(raiz -> derecha);
+        printf("%d  ", raiz -> valor);
+    }
+}
+
+void preOrder(struct nodo *raiz) {
+    if (raiz != NULL){
+        printf("%d  ", raiz -> valor);
+        preOrder(raiz -> izquierda);
+        preOrder(raiz -> derecha);
     }
 }
 
