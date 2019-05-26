@@ -1,7 +1,3 @@
-/*
- * C Program to Construct a Balanced Binary Search Tree
- * which has same data members as the given Doubly Linked List
- */
 #include <stdio.h>
 #include <stdlib.h>
 
