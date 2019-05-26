@@ -11,25 +11,77 @@ struct nodo {
     int valor;
 };
 
+int menu(struct nodo *);
+
+//Opcion 1
 void insertarNodo(struct nodo **);
 struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz);
+//Opcion 2
+void borrarNodo(struct nodo **);
+//Opcion 3
+void buscarNodo(struct nodo **);
+//Opcion 4
 void inOrder(struct nodo *);
+//Opcion 5
 void preOrder(struct nodo *);
+//Opcion 6
 void postOrder(struct nodo *);
 
 
 int main() {
     struct nodo *raiz = NULL;
     printf("Trabajo Practico - Arbol binario de busqueda (balanceado) \n\n");
-    //TODO menu de selección de acción
+    printf("Debe cargar valores en el arbol para comenzar. \n");
     insertarNodo(&raiz);
-    printf("\n Pre-order \n");
-    preOrder(raiz);
-    printf("\n In-order \n");
-    inOrder(raiz);
-    printf("\n Post-order \n");
-    postOrder(raiz);
+    printf("\n Ha cargado el arbol! Que desea hacer?\n");
+    int mostrarMenu = 1;
+    while(mostrarMenu != 0){
+        mostrarMenu = menu(raiz);
+    }
     return 0;
+}
+
+int menu(struct nodo *raiz){
+    int opcion;
+    printf("\n\n ------------------- MENU ------------------- \n\n");
+    printf("1. Cargar mas valores\n");
+    printf("2. Borrar un valor\n");
+    printf("3. Buscar un valor\n");
+    printf("4. Imprimir en orden\n");
+    printf("5. Imprimir en Pre-orden\n");
+    printf("6. Imprimir en Post-orden\n");
+    printf("0. Salir\n");
+
+    scanf("%d", &opcion);
+    switch (opcion){
+        case 0:
+            break;
+        case 1:
+            insertarNodo(&raiz);
+            break;
+        case 2:
+            borrarNodo(&raiz);
+            break;
+        case 3:
+            buscarNodo(&raiz);
+            break;
+        case 4:
+            printf("\n Arbol recorrido en orden \n");
+            inOrder(raiz);
+            break;
+        case 5:
+            printf("\n Arbol recorrido en pre-orden \n");
+            preOrder(raiz);
+            break;
+        case 6:
+            printf("\n Arbol recorrido en post-orden \n");
+            postOrder(raiz);
+            break;
+        default:
+            printf("El valor ingresado es incorrecto. Intente nuevamente");
+            break;
+    }
+    return opcion;
 }
 
 
@@ -55,6 +107,14 @@ void preOrder(struct nodo *raiz) {
         preOrder(raiz -> izquierda);
         preOrder(raiz -> derecha);
     }
+}
+
+void borrarNodo(struct nodo **raiz) {
+    //TODO
+}
+
+void buscarNodo(struct nodo **raiz) {
+    //TODO
 }
 
 void insertarNodo(struct nodo **raiz) {
