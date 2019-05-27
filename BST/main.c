@@ -109,7 +109,7 @@ void preOrder(struct nodo *raiz) {
 void borrarNodo(struct nodo **raiz) {
     struct nodo *posicion = buscarNodo(raiz);
     if(posicion != NULL){
-        //TODO metodo de borrado
+        //TODO metodo de borrado.
     }
 }
 
