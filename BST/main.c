@@ -230,3 +230,22 @@ struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz) {
     return posicion;
 }
 
+
+void balancear(struct nodo **arbol){
+
+    struct nodo *posicion = *arbol;
+    if(*arbol != NULL){
+        if (calcularAltura(posicion->izquierda) - calcularAltura(posicion->derecha) == 2){
+            if (calcularAltura (posicion->izquierda->izquierda) >= calcularAltura (posicion->izquierda->derecha))
+                rotacionSimple (*posicion, 1);
+            else
+                rotacionDoble (*posicion, 1);
+        }else if (calcularAltura (posicion->derecha) - calcularAltura (posicion->izquierda) == 2){
+
+            if (calcularAltura (posicion->derecha->derecha) >= calcularAltura (posicion->derecha->izquierda))
+                rotacionSimple (*posicion, 0);
+            else
+                rotacionDoble (*posicion, 0);
+        }
+    }
+}
