@@ -5,7 +5,6 @@ struct nodo {
     struct nodo *izquierda;
     struct nodo *derecha;
     int valor;
-    int altura;
 };
 
 int menu(struct nodo *);
@@ -229,12 +228,5 @@ struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz) {
         }
     }
     return posicion;
-}
-
-
-int calcularAltura(struct nodo* nodo){
-    if(nodo != NULL){
-        nodo->altura = max (nodo->izquierda->altura, nodo->derecha->altura ) + 1;
-    }
 }
 
