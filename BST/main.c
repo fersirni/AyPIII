@@ -235,17 +235,41 @@ void balancear(struct nodo **arbol){
 
     struct nodo *posicion = *arbol;
     if(*arbol != NULL){
-        if (calcularAltura(posicion->izquierda) - calcularAltura(posicion->derecha) == 2){
-            if (calcularAltura (posicion->izquierda->izquierda) >= calcularAltura (posicion->izquierda->derecha))
+        if (calcularAltura(posicion->izquierda,0) - calcularAltura(posicion->derecha,0) == 2){
+            if (calcularAltura (posicion->izquierda->izquierda, 0) >= calcularAltura (posicion->izquierda->derecha, 0))
                 rotacionSimple (*posicion, 1);
             else
                 rotacionDoble (*posicion, 1);
-        }else if (calcularAltura (posicion->derecha) - calcularAltura (posicion->izquierda) == 2){
+        }else if (calcularAltura (posicion->derecha,0) - calcularAltura (posicion->izquierda,0) == 2){
 
-            if (calcularAltura (posicion->derecha->derecha) >= calcularAltura (posicion->derecha->izquierda))
+            if (calcularAltura (posicion->derecha->derecha,0) >= calcularAltura (posicion->derecha->izquierda,0))
                 rotacionSimple (*posicion, 0);
             else
                 rotacionDoble (*posicion, 0);
         }
     }
 }
+
+int calcularAltura(struct nodo *a, int *altura) {
+    *altura = 0;
+    alturaNodo(a, 0, altura);
+    return *altura;
+}
+
+static void alturaNodo(struct nodo *nodo, int a, int *altura) {
+    if(nodo->izquierda)
+        auxAltura(nodo->izquierda, a+1, altura);
+    if(nodo->derecha)
+        auxAltura(nodo->derecha, a+1, altura);
+    if( (esHoja(nodo) == 1) && (a > *altura) )
+        *altura = a;
+}
+
+int esHoja(struct nodo *nodo){
+    if(nodo->derecha == NULL && nodo->izquierda == NULL)
+        return 1;
+    else
+        return 0;
+}
+
+
