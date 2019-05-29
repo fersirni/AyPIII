@@ -113,7 +113,7 @@ struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz) {
 
 
 //Seguro hay que modificar, pero para seguir usando lo anterior, se me ocurrio que habria que indicar que hijo queres
-//revisar, al momento lo defini con 1 o 0. Es feo, pero es para ver que piensan :P 
+//revisar, al momento lo defini con 1 o 0. Es feo, pero es para ver que piensan :P
 void eliminarNodo(struct nodo ** nodoPadre, int valorHijo){
     // Issue = Deleteo de Nodos #10
 
@@ -152,5 +152,28 @@ void eliminarNodo(struct nodo ** nodoPadre, int valorHijo){
         }
     }
     //3 - Borrar un Nodo con dos subárboles hijos
-        //Falta esta logica y probar!
+    else{
+        int valorNodoAuxiliarMasIzquierdo;
+
+        struct nodo nodoOriginal = nodoAux;
+        struct nodo nodoPadreOriginalRenovado;
+
+        while( nodoAux.izquierda!= NULL && nodoAux.izquierda->valor != NULL){
+            nodoPadreOriginalRenovado = nodoAux;
+            nodoAux = *nodoAux.izquierda;
+
+        }
+        if(nodoAux.valor != NULL){
+            valorNodoAuxiliarMasIzquierdo = nodoAux.valor;
+            //Aca copio el valor en el nodo que queria borrar.
+            nodoOriginal.valor = valorNodoAuxiliarMasIzquierdo;
+            //Asigno al nodo padre de este nodo a borrar, la refencia izquierda del nodo.derecho del nodo a borrar.
+            nodoPadreOriginalRenovado.izquierda = nodoAux.derecha;
+
+        }
+
+
+
+
+    }
 }
