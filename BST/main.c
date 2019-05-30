@@ -231,38 +231,12 @@ struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz) {
 }
 
 
-void balancear(struct nodo **arbol){
-
-    struct nodo *posicion = *arbol;
-    if(*arbol != NULL){
-        if (calcularAltura(posicion->izquierda,0) - calcularAltura(posicion->derecha,0) == 2){
-            if (calcularAltura (posicion->izquierda->izquierda, 0) >= calcularAltura (posicion->izquierda->derecha, 0))
-                rotacionSimple (*posicion, 1);
-            else
-                rotacionDoble (*posicion, 1);
-        }else if (calcularAltura (posicion->derecha,0) - calcularAltura (posicion->izquierda,0) == 2){
-
-            if (calcularAltura (posicion->derecha->derecha,0) >= calcularAltura (posicion->derecha->izquierda,0))
-                rotacionSimple (*posicion, 0);
-            else
-                rotacionDoble (*posicion, 0);
-        }
-    }
-}
-
-int calcularAltura(struct nodo *a, int *altura) {
-    *altura = 0;
-    alturaNodo(a, 0, altura);
-    return *altura;
-}
-
-static void alturaNodo(struct nodo *nodo, int a, int *altura) {
-    if(nodo->izquierda)
-        auxAltura(nodo->izquierda, a+1, altura);
-    if(nodo->derecha)
-        auxAltura(nodo->derecha, a+1, altura);
-    if( (esHoja(nodo) == 1) && (a > *altura) )
-        *altura = a;
+int maximo(int a, int b){
+	if (a > b){
+		return a;
+	}else{
+		return b;
+	}
 }
 
 int esHoja(struct nodo *nodo){
@@ -272,4 +246,76 @@ int esHoja(struct nodo *nodo){
         return 0;
 }
 
+
+void rotacionSimple (struct nodo **nodo, int lado){
+    struct nodo *aux;
+    aux = malloc(sizeof(struct nodo));
+	//Rotacion Simple Izquierda
+    if(lado == 1){
+		aux = (*nodo)->izquierda;
+		(*nodo)->izquierda = aux->derecha;
+		aux->derecha = *nodo;
+    }
+    //Rotacion Simple Derecha
+    if (lado == 0){
+		aux = (*nodo)->derecha;
+		(*nodo)->derecha = aux->izquierda;
+		aux->izquierda = *nodo;
+    }
+    *nodo = aux;
+}
+
+
+void rotacionDoble (struct nodo **nodo,int lado){
+	/* rotación izquierda */
+	if (lado == 1){
+        rotacionSimple(&(*nodo)->izquierda, 0);
+		rotacionSimple(nodo, 1);
+    }
+	/* rotación derecha */
+    if (lado == 0){
+		rotacionSimple(&(*nodo)->derecha, 1);
+		rotacionSimple(nodo, 0);
+    }
+}
+
+
+int calcularAltura(struct nodo *nodo) {
+    int alturaIzquierda;
+    int alturaDerecha;
+
+    if(nodo->izquierda != NULL){
+        alturaIzquierda = calcularAltura(nodo->izquierda);
+    }else {
+        alturaIzquierda = 0;
+    }
+    if(nodo->derecha != NULL){
+        alturaDerecha = calcularAltura(nodo->derecha);
+    }else{
+        alturaDerecha = 0;
+    }
+    return (maximo(alturaIzquierda, alturaDerecha)) + 1;
+}
+
+
+void balancear(struct nodo **arbol){
+    struct nodo *posicion = *arbol;
+    if(*arbol != NULL){
+        if (calcularAltura(posicion->izquierda) - calcularAltura(posicion->derecha) == 2){
+            if (calcularAltura (posicion->izquierda->izquierda) >= calcularAltura (posicion->izquierda->derecha)){
+                rotacionSimple (arbol, 1);
+            }
+            else{
+                rotacionDoble (arbol, 1);
+            }
+        }else if (calcularAltura (posicion->derecha) - calcularAltura (posicion->izquierda) == 2){
+            if (calcularAltura (posicion->derecha->derecha) >= calcularAltura (posicion->derecha->izquierda)){
+                rotacionSimple (arbol, 0);
+            }
+            else{
+                rotacionDoble (arbol, 0);
+            }
+        }
+    }
+}
 
