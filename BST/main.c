@@ -248,21 +248,27 @@ int esHoja(struct nodo *nodo){
 
 
 void rotacionSimple (struct nodo **nodo, int lado){
-    struct nodo *aux;
-    aux = malloc(sizeof(struct nodo));
-	//Rotacion Simple Izquierda
+    struct nodo *aux1;
+    struct nodo *aux2;
+    aux1 = malloc(sizeof(struct nodo));
+    aux2 = malloc(sizeof(struct nodo));
+    //Rotacion Simple Izquierda
     if(lado == 1){
-		aux = (*nodo)->izquierda;
-		(*nodo)->izquierda = aux->derecha;
-		aux->derecha = *nodo;
+        aux2 = (*nodo)->derecha->izquierda;
+        aux1 = (*nodo);
+        (*nodo) = (*nodo)->derecha;
+        (*nodo)->izquierda = aux1;
+        aux1->derecha = aux2;
     }
     //Rotacion Simple Derecha
     if (lado == 0){
-		aux = (*nodo)->derecha;
-		(*nodo)->derecha = aux->izquierda;
-		aux->izquierda = *nodo;
+        aux2 = (*nodo)->izquierda->derecha;
+        aux1 = (*nodo);
+        (*nodo) = (*nodo)->izquierda;
+        (*nodo)->derecha = aux1;
+        aux1->izquierda = aux2;
     }
-    *nodo = aux;
+
 }
 
 
