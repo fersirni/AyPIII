@@ -308,6 +308,7 @@ void balancear(struct nodo **arbol){
     struct nodo *posicion = *arbol;
     if(*arbol != NULL){
         if (calcularAltura(posicion->izquierda) - calcularAltura(posicion->derecha) == 2){
+			//Rotacion a la izquierda
             if (calcularAltura (posicion->izquierda->izquierda) >= calcularAltura (posicion->izquierda->derecha)){
                 rotacionSimple (arbol, 1);
             }
@@ -315,6 +316,7 @@ void balancear(struct nodo **arbol){
                 rotacionDoble (arbol, 1);
             }
         }else if (calcularAltura (posicion->derecha) - calcularAltura (posicion->izquierda) == 2){
+			//Rotacion a la derecha
             if (calcularAltura (posicion->derecha->derecha) >= calcularAltura (posicion->derecha->izquierda)){
                 rotacionSimple (arbol, 0);
             }
