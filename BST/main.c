@@ -107,10 +107,7 @@ void preOrder(struct nodo *raiz) {
 }
 
 void borrarNodo(struct nodo **raiz) {
-    struct nodo *posicion = buscarNodo(raiz);
-    if(posicion != NULL){
-        //TODO metodo de borrado
-    }
+
 }
 
 struct nodo *buscarNodo(struct nodo **raiz) {
@@ -231,68 +228,74 @@ struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz) {
 }
 
 
-//Seguro hay que modificar, pero para seguir usando lo anterior, se me ocurrio que habria que indicar que hijo queres
-//revisar, al momento lo defini con 1 o 0. Es feo, pero es para ver que piensan :P
-void eliminarNodo(struct nodo ** nodoPadre, int valorHijo){
-    // Issue = Deleteo de Nodos #10
+void eliminarNodo(struct nodo **raiz, int valor){
 
-    struct nodo nodoAuxPadre;
-    struct nodo nodoAux;
+    struct nodo *posicion = *raiz;
+    struct nodo *posicionPadre = *raiz;
+    int masIzquierda;
 
-
-    if(valorHijo == 0){
-        struct nodo nodoAuxPadre = **nodoPadre;
-        struct nodo nodoAux = *nodoAuxPadre.izquierda;
-    } else{
-        struct nodo nodoAuxPadre = **nodoPadre;
-        struct nodo nodoAux = *nodoAuxPadre.derecha;
+    while(valor != posicion -> valor){
+        if(valor > posicion -> valor){
+            if(posicion -> derecha == NULL){
+                printf("El valor a borrar no se encuentra en el arbol.")
+                return;
+            } else {
+                posicionPadre = posicion;
+                posicion = posicion -> derecha;
+            }
+        }
+        if(posicion -> valor > valor){
+            if(posicion -> izquierda == NULL){
+                printf("El valor a borrar no se encuentra en el arbol.")
+                return;
+            } else {
+                posicionPadre = posicion;
+                posicion = posicion -> izquierda;
+            }
+        }
     }
-
-
-    //El deleteo de nodos, en un arbol se puede analizar desde 3 variantes:
 
     //1 - Borrar un Nodo sin hijos
-    //En teoría aca deleteo el valor nulleandolo, debo probar xD
-
-    if(nodoAux.izquierda == NULL && nodoAux.derecha == NULL){
-        nodoAux.valor == NULL;
+    if(posicion -> izquierda == NULL && posicion -> derecha == NULL){
+        if(posicionPadre -> valor > posicion -> valor){
+            posicionPadre -> izquierda = NULL;
+        } else {
+            posicionPadre -> derecha = NULL;
+        }
     }
     //2 - Borrar un Nodo con un subárbol hijo
-    else if (nodoAux.izquierda != NULL || nodoAux.derecha != NULL) {
-        //Si es nodo izquierdo..
-        if(nodoAux.izquierda!= NULL && nodoAux.derecha == NULL
-        && nodoAux.izquierda->izquierda == NULL && nodoAux.izquierda->derecha == NULL){
-            nodoAuxPadre.izquierda  = nodoAux.izquierda;
-        }
-            //Es nodo derecho
-        else if(nodoAux.derecha != NULL && nodoAux.izquierda == NULL
-        && nodoAux.derecha->derecha == NULL && nodoAux.derecha->izquierda == NULL) {
-            nodoAuxPadre.derecha = nodoAux.derecha;
+    else if (posicion -> izquierda == NULL || posicion -> derecha == NULL) {
+        if(posicion -> izquierda == NULL){
+            if(posicionPadre -> valor > posicion -> valor){
+                posicionPadre -> izquierda = posicion -> derecha ;
+            } else {
+                posicionPadre -> derecha = posicion -> derecha;
+            }
+        } else{
+            if(posicionPadre -> valor > posicion -> valor){
+                posicionPadre -> izquierda = posicion -> izquierda ;
+            } else {
+                posicionPadre -> derecha = posicion -> izquierda;
+            }
         }
     }
     //3 - Borrar un Nodo con dos subárboles hijos
     else{
-        int valorNodoAuxiliarMasIzquierdo;
+        masIzquierda = buscarMasIzquierda(posicion -> derecha);
+        eliminarNodo(raiz, masIzquierda);
+        posicion -> valor = masIzquierda;
+    }
+    posicion = NULL;
+}
 
-        struct nodo nodoOriginal = nodoAux;
-        struct nodo nodoPadreOriginalRenovado;
-
-        while( nodoAux.izquierda!= NULL && nodoAux.izquierda->valor != NULL){
-            nodoPadreOriginalRenovado = nodoAux;
-            nodoAux = *nodoAux.izquierda;
-
+int buscarMasIzquierda(struct nodo **posicion) {
+    if (*posicion == NULL) {
+        printf("Error al borrar el nodo");
+        return NULL;
+    } else {
+        while(posicion -> izquierda != NULL){
+            posicion = posicion -> izquierda;
         }
-        if(nodoAux.valor != NULL){
-            valorNodoAuxiliarMasIzquierdo = nodoAux.valor;
-            //Aca copio el valor en el nodo que queria borrar.
-            nodoOriginal.valor = valorNodoAuxiliarMasIzquierdo;
-            //Asigno al nodo padre de este nodo a borrar, la refencia izquierda del nodo.derecho del nodo a borrar.
-            nodoPadreOriginalRenovado.izquierda = nodoAux.derecha;
-
-        }
-
-
-
-
+        return posicion -> valor;
     }
 }
