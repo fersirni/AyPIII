@@ -15,7 +15,7 @@ struct nodo *buscarPosicionParaInsertar(int valor, struct nodo **raiz);
 //Opcion 2
 void borrarNodo(struct nodo **);
 void eliminarNodo(int valor, struct nodo **raiz);
-int buscarMasIzquierda(struct nodo*);
+int buscarMasIzquierda(struct nodo *posicion);
 //Opcion 3
 struct nodo *buscarNodo(struct nodo **);
 struct nodo *buscarPosicion(int valor, struct nodo **raiz);
@@ -23,11 +23,12 @@ struct nodo *buscarPosicion(int valor, struct nodo **raiz);
 void inOrder(struct nodo *);
 //Opcion 5
 void preOrder(struct nodo *);
+
 //Opcion 6
 void postOrder(struct nodo *);
 
+void balancear(struct nodo **arbol);
 
-int buscarMasIzquierda(struct nodo *posicion);
 
 int main() {
     struct nodo *raiz = NULL;
@@ -84,7 +85,6 @@ int menu(struct nodo *raiz){
     }
     return opcion;
 }
-
 
 void inOrder(struct nodo *raiz) {
     if (raiz != NULL){
@@ -197,6 +197,7 @@ void insertarNodo(struct nodo **raiz) {
                 }
             }
         }
+        balancear(raiz);
         printf("Quiere ingresar un nuevo numero? \n");
         printf("1. Si \n");
         printf("0. No \n");
@@ -381,24 +382,64 @@ int calcularAltura(struct nodo *nodo) {
 
 
 void balancear(struct nodo **arbol){
+    printf("\nBalanceando el arbol\n");
     struct nodo *posicion = *arbol;
-    if(*arbol != NULL){
-        if (calcularAltura(posicion->izquierda) - calcularAltura(posicion->derecha) == 2){
+    int alturaIzq = 0;
+    int alturaDer = 0;
+    if(*arbol != NULL ){
+        if(posicion->izquierda != NULL){
+            alturaIzq = calcularAltura(posicion->izquierda);
+        }
+        if(posicion->derecha != NULL){
+            alturaDer = calcularAltura(posicion->derecha);
+        }
+        printf("\n La altura de la rama izquierda es: %d\n",alturaIzq);
+        printf("\n La altura de la rama derecha es: %d\n",alturaDer);
+        if (alturaIzq - alturaDer >= 2){
 			//Rotacion a la izquierda
-            if (calcularAltura (posicion->izquierda->izquierda) >= calcularAltura (posicion->izquierda->derecha)){
-                rotacionSimple (arbol, 1);
+			printf("\nBalanceo a la izquierda.\n");
+			int alturaHijoIzq = 0;
+			int alturaHijoDer = 0;
+			if(posicion->izquierda != NULL){
+                if(posicion->izquierda->izquierda != NULL){
+                    alturaHijoIzq = calcularAltura (posicion->izquierda->izquierda);
+                }
+                if(posicion->izquierda->derecha != NULL){
+                    alturaHijoDer = calcularAltura (posicion->izquierda->derecha);
+                }
             }
-            else{
+            if (alturaHijoIzq >= alturaHijoDer){
+                printf("\nRotacion simple\n");
+                rotacionSimple (arbol, 1);
+            } else{
+                printf("\nRotacion doble\n");
                 rotacionDoble (arbol, 1);
             }
-        }else if (calcularAltura (posicion->derecha) - calcularAltura (posicion->izquierda) == 2){
-			//Rotacion a la derecha
-            if (calcularAltura (posicion->derecha->derecha) >= calcularAltura (posicion->derecha->izquierda)){
-                rotacionSimple (arbol, 0);
+        } else if (alturaDer - alturaIzq >= 2){
+            //Rotacion a la derecha
+            printf("\nBalanceo a la derecha.\n");
+            int alturaHijoIzq = 0;
+            int alturaHijoDer = 0;
+            if(posicion->derecha != NULL){
+                if(posicion->derecha->izquierda != NULL){
+                    alturaHijoIzq = calcularAltura (posicion->derecha->izquierda);
+                }
+                if(posicion->derecha->derecha != NULL){
+                    alturaHijoDer = calcularAltura (posicion->derecha->derecha);
+                }
             }
-            else{
+            if (alturaHijoDer >= alturaHijoIzq){
+                printf("\nRotacion simple\n");
+                rotacionSimple (arbol, 0);
+            } else{
+                printf("\nRotacion doble\n");
                 rotacionDoble (arbol, 0);
             }
+        } else {
+            printf("\nEsta balanceado.\n");
         }
+    } else {
+        printf("\nEl arbol esta vacio\n");
     }
+    printf("\nTermino de balancear el arbol.\n");
 }
