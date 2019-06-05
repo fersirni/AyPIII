@@ -28,6 +28,7 @@ void preOrder(struct nodo *);
 void postOrder(struct nodo *);
 
 void balancear(struct nodo **arbol);
+void balancearArbol(struct nodo **raiz);
 
 
 int main() {
@@ -197,7 +198,7 @@ void insertarNodo(struct nodo **raiz) {
                 }
             }
         }
-        balancear(raiz);
+        balancearArbol(raiz);
         printf("Quiere ingresar un nuevo numero? \n");
         printf("1. Si \n");
         printf("0. No \n");
@@ -316,31 +317,25 @@ int maximo(int a, int b){
 	}
 }
 
-int esHoja(struct nodo *nodo){
-    if(nodo->derecha == NULL && nodo->izquierda == NULL)
-        return 1;
-    else
-        return 0;
-}
-
 
 void rotacionSimple (struct nodo **nodo, int lado){
-    struct nodo *aux1;
-    struct nodo *aux2;
-    aux1 = malloc(sizeof(struct nodo));
-    aux2 = malloc(sizeof(struct nodo));
+    struct nodo *aux1 = NULL;
+    struct nodo *aux2 = NULL;
+    aux1 = (*nodo);
     //Rotacion Simple Izquierda
     if(lado == 1){
-        aux2 = (*nodo)->derecha->izquierda;
-        aux1 = (*nodo);
+        if((*nodo)->derecha->izquierda != NULL){
+            aux2 = (*nodo)->derecha->izquierda;
+        }
         (*nodo) = (*nodo)->derecha;
         (*nodo)->izquierda = aux1;
         aux1->derecha = aux2;
     }
     //Rotacion Simple Derecha
     if (lado == 0){
-        aux2 = (*nodo)->izquierda->derecha;
-        aux1 = (*nodo);
+        if((*nodo)->izquierda->derecha != NULL){
+            aux2 = (*nodo)->izquierda->derecha;
+        }
         (*nodo) = (*nodo)->izquierda;
         (*nodo)->derecha = aux1;
         aux1->izquierda = aux2;
@@ -352,12 +347,12 @@ void rotacionSimple (struct nodo **nodo, int lado){
 void rotacionDoble (struct nodo **nodo,int lado){
 	/* rotación izquierda */
 	if (lado == 1){
-        rotacionSimple(&(*nodo)->izquierda, 0);
+        rotacionSimple(&(*nodo)->derecha, 0);
 		rotacionSimple(nodo, 1);
     }
 	/* rotación derecha */
     if (lado == 0){
-		rotacionSimple(&(*nodo)->derecha, 1);
+		rotacionSimple(&(*nodo)->izquierda, 1);
 		rotacionSimple(nodo, 0);
     }
 }
@@ -380,6 +375,17 @@ int calcularAltura(struct nodo *nodo) {
     return (maximo(alturaIzquierda, alturaDerecha)) + 1;
 }
 
+void balancearArbol(struct nodo **raiz){
+    struct nodo *posicion = *raiz;
+    while (posicion ->izquierda!= NULL){
+        posicion = posicion->izquierda;
+        balancear(&posicion);
+    }
+    while (posicion ->derecha!= NULL){
+        posicion = posicion->derecha;
+        balancear(&posicion);
+    }
+}
 
 void balancear(struct nodo **arbol){
     printf("\nBalanceando el arbol\n");
@@ -395,40 +401,46 @@ void balancear(struct nodo **arbol){
         }
         printf("\n La altura de la rama izquierda es: %d\n",alturaIzq);
         printf("\n La altura de la rama derecha es: %d\n",alturaDer);
-        if (alturaIzq - alturaDer >= 2){
+        if (alturaDer - alturaIzq >= 2){
 			//Rotacion a la izquierda
 			printf("\nBalanceo a la izquierda.\n");
-			int alturaHijoIzq = 0;
-			int alturaHijoDer = 0;
-			if(posicion->izquierda != NULL){
-                if(posicion->izquierda->izquierda != NULL){
-                    alturaHijoIzq = calcularAltura (posicion->izquierda->izquierda);
+
+			int alturaHijoDerechoALaDer = 0;
+			int alturaHijoDerechoALaIzq = 0;
+
+            if(posicion-> derecha != NULL){
+                if(posicion->derecha->izquierda != NULL){
+                    alturaHijoDerechoALaIzq = calcularAltura (posicion->derecha->izquierda);
                 }
-                if(posicion->izquierda->derecha != NULL){
-                    alturaHijoDer = calcularAltura (posicion->izquierda->derecha);
+                if(posicion->derecha->derecha != NULL){
+                    alturaHijoDerechoALaDer = calcularAltura (posicion->derecha->derecha);
                 }
             }
-            if (alturaHijoIzq >= alturaHijoDer){
+
+            printf("Alturno hijo derecho a la derecha: %d\n", alturaHijoDerechoALaDer);
+            printf("Alturno hijo derecho a la izquierda: %d\n", alturaHijoDerechoALaIzq);
+
+            if (alturaHijoDerechoALaDer >= alturaHijoDerechoALaIzq){
                 printf("\nRotacion simple\n");
                 rotacionSimple (arbol, 1);
             } else{
                 printf("\nRotacion doble\n");
                 rotacionDoble (arbol, 1);
             }
-        } else if (alturaDer - alturaIzq >= 2){
+        } else if (alturaIzq - alturaDer >= 2){
             //Rotacion a la derecha
             printf("\nBalanceo a la derecha.\n");
-            int alturaHijoIzq = 0;
-            int alturaHijoDer = 0;
-            if(posicion->derecha != NULL){
-                if(posicion->derecha->izquierda != NULL){
-                    alturaHijoIzq = calcularAltura (posicion->derecha->izquierda);
+            int alturaHijoIzquierdoALaIzq = 0;
+            int alturaHijoIzquierdoALaDer = 0;
+            if(posicion->izquierda != NULL){
+                if(posicion->izquierda->izquierda != NULL){
+                    alturaHijoIzquierdoALaIzq = calcularAltura (posicion->izquierda->izquierda);
                 }
-                if(posicion->derecha->derecha != NULL){
-                    alturaHijoDer = calcularAltura (posicion->derecha->derecha);
+                if(posicion->izquierda->derecha != NULL){
+                    alturaHijoIzquierdoALaDer = calcularAltura (posicion->izquierda->derecha);
                 }
             }
-            if (alturaHijoDer >= alturaHijoIzq){
+            if (alturaHijoIzquierdoALaIzq >= alturaHijoIzquierdoALaDer){
                 printf("\nRotacion simple\n");
                 rotacionSimple (arbol, 0);
             } else{
